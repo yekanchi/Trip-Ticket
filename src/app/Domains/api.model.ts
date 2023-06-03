@@ -1,4 +1,17 @@
 export interface ApiResponse {
+  Date: string;
+  OriginPersianName: string;
+  OriginEnglishName: string;
+  OriginCode: string;
+  DestinationPersianName: string;
+  DestinationEnglishName: string;
+  DestinationCode: string;
+  Today: string;
+  Logo: string;
+  Items: Items[];
+}
+
+export interface Items {
   ID: number;
   IsVip: boolean;
   BusType: string;
@@ -28,17 +41,4 @@ export interface ApiResponse {
   OriginTerminalUrl: string;
   DestinationTerminalUrl: string;
   Status: number;
-}
-
-export interface Item {
-  Date: string;
-  OriginPersianName: string;
-  OriginEnglishName: string;
-  OriginCode: string;
-  DestinationPersianName: string;
-  DestinationEnglishName: string;
-  DestinationCode: string;
-  Today: string;
-  Logo: string;
-  Items: Item[];
 }

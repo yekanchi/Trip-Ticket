@@ -1,37 +1,7 @@
-<div class="container">
-    <img class="img-head" src="\assets\photos\bus.png" alt="Trip">
-    <h1 class="title">Bus Ticket</h1>
-    <p class="description">Choose Origin & Distinction</p>
-    <div class="form-box">
-        <div class="input-main">
-            <select class="form-select" aria-label="Default select example" (change)="getOriginCode($event)">
-                <option selected>Origin</option>
-                <option *ngFor="let item of citiesList" [value]="item.Code">{{item.Name}}</option>
-            </select>
-        </div>
-        <div class="input-main">
-            <select class="form-select" aria-label="Default select example" (change)="getDistinctionCode($event)">
-                <option selected>Distinction</option>
-                <option *ngFor="let item of citiesList" [value]="item.Code">{{item.Name}}
-                </option>
-            </select>
-        </div>
-        <div class="input-main">
-            <ng-persian-datepicker>
-                <input type="text" [formControl]="dateValue" [(ngModel)]="date" />
-            </ng-persian-datepicker>
-        </div>
-        <button class="submit" type="submit" (click)="Show()">Search</button>
-    </div>
+<div style="display: flex;">
+    <app-show-available-seats></app-show-available-seats>
 
-    <div>
-        <h2>Available Seat :</h2>
-        <div *ngFor="let res of response">
-            <div class="col-md-8" *ngFor="let Ave of res.Items" style="font-size: 25px">
-                <span *ngIf="Ave.AvailableSeatCount > 0">
-                    {{Ave.DepartureTime}} : {{Ave.AvailableSeatCount}}
-                </span>
-            </div>
-        </div>
-    </div>
+    <app-show-available-seats></app-show-available-seats>
+
+    <app-show-available-seats></app-show-available-seats>
 </div>

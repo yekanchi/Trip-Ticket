@@ -1,0 +1,40 @@
+<div class="container col-md-8" style="overflow: auto;">
+    <img class="img-head" src="\assets\photos\bus.png" alt="Trip">
+    <h1 class="title">Bus Ticket</h1>
+    <p class="description">Choose Origin & Distinction</p>
+    <form [formGroup]="TicketForm" (ngSubmit)="ShowAvailSeat()" class="form-box">
+        <div class="input-main">
+            <label for="origin" class="form-label">Origin:</label>
+            <select formControlName="origin" class="form-select" aria-label="Default select example"
+                (change)="getOriginCode($event)">
+                <option *ngFor="let item of citiesList" [value]="item.Code">{{item.Name}}</option>
+            </select>
+        </div>
+        <div class="input-main">
+            <label for="destination" class="form-label">Destination:</label>
+            <select formControlName="destination" class="form-select" aria-label="Default select example"
+                (change)="getDestinationCode($event)">
+                <option *ngFor="let item of citiesList" [value]="item.Code">{{item.Name}}
+                </option>
+            </select>
+        </div>
+        <div class="input-main">
+            <ng-persian-datepicker>
+                <input type="text" formControlName="date" />
+            </ng-persian-datepicker>
+        </div>
+        <button class="submit" type="submit">Search</button>
+    </form>
+
+    <div>
+        <h2>Available Seat :</h2>
+        <span *ngIf="isSearching">
+            <app-loading-spinner></app-loading-spinner>
+        </span>
+        <div class="col-md-8" *ngFor="let Ave of response" style="font-size: 25px">
+            <span *ngIf="Ave.AvailableSeatCount> 0">
+                {{Ave.DepartureTime}} : {{Ave.AvailableSeatCount}}
+            </span>
+        </div>
+    </div>
+</div>
