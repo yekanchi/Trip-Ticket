@@ -1,40 +1,59 @@
-<div class="container col-md-8" style="overflow: auto;">
-    <img class="img-head" src="\assets\photos\bus.png" alt="Trip">
-    <h1 class="title">Bus Ticket</h1>
-    <p class="description">Choose Origin & Distinction</p>
-    <form [formGroup]="TicketForm" (ngSubmit)="ShowAvailSeat()" class="form-box">
-        <div class="input-main">
-            <label for="origin" class="form-label">Origin:</label>
-            <select formControlName="origin" class="form-select" aria-label="Default select example"
-                (change)="getOriginCode($event)">
-                <option *ngFor="let item of citiesList" [value]="item.Code">{{item.Name}}</option>
-            </select>
-        </div>
-        <div class="input-main">
-            <label for="destination" class="form-label">Destination:</label>
-            <select formControlName="destination" class="form-select" aria-label="Default select example"
-                (change)="getDestinationCode($event)">
-                <option *ngFor="let item of citiesList" [value]="item.Code">{{item.Name}}
-                </option>
-            </select>
-        </div>
-        <div class="input-main">
-            <ng-persian-datepicker>
-                <input type="text" formControlName="date" />
-            </ng-persian-datepicker>
-        </div>
-        <button class="submit" type="submit">Search</button>
-    </form>
 
-    <div>
-        <h2>Available Seat :</h2>
+    <form [formGroup]="TicketForm" (ngSubmit)="ShowAvailSeat()" class="form-box">
+        <div *ngIf="!isSearching">
+            <div class="input-main">
+                <label for="origin" class="form-label">Origin:</label>
+                <select formControlName="origin" class="form-select" aria-label="Default select example"
+                    (change)="getOriginCode($event)" required>
+                    <option *ngFor="let item of citiesList" [value]="item.Code">{{item.Name}}</option>
+                </select>
+            </div>
+            <div class="input-main">
+                <label for="destination" class="form-label">Destination:</label>
+                <select formControlName="destination" class="form-select" aria-label="Default select example"
+                    (change)="getDestinationCode($event)" required>
+                    <option *ngFor="let item of citiesList" [value]="item.Code">{{item.Name}}
+                    </option>
+                </select>
+            </div>
+            <div class="input-main">
+                <ng-persian-datepicker dateFormat="YYYY-MM-DD">
+                    <input type="text" formControlName="date" required />
+                </ng-persian-datepicker>
+            </div>
+            <div>
+                <select class="time-select" formControlName="timeFrom" name="from" id="time" required>
+                    <option *ngFor="let time of timeNumbers" [value]="time">{{time}}</option>
+                </select>
+                <select class="time-select" formControlName="timeTo" name="to" id="time" required>
+                    <option *ngFor="let time of timeNumbers" [value]="time">{{time}}</option>
+                </select>
+            </div>
+        </div>
+
+        <div *ngIf="isSearching">
+            <h2>From <span class="org-des"> {{originName}}</span> To <span class="org-des">{{destinationName}} </span>
+            </h2>
+        </div>
+
+        <button class="submit" type="submit" *ngIf="!isSearching" [disabled]="!TicketForm.valid">Search</button>
         <span *ngIf="isSearching">
             <app-loading-spinner></app-loading-spinner>
         </span>
-        <div class="col-md-8" *ngFor="let Ave of response" style="font-size: 25px">
-            <span *ngIf="Ave.AvailableSeatCount> 0">
-                {{Ave.DepartureTime}} : {{Ave.AvailableSeatCount}}
-            </span>
+        <button class="submit" type="button" (click)="StopSearching()" *ngIf="isSearching">Stop</button>
+    </form>
+
+    <!-- <div *ngIf="isSearching" style="position: absolute; right: 15px;">
+        <span style=" font-size: 50px;" class="material-symbols-outlined">
+            volume_up
+        </span>
+    </div>  -->
+
+    <div class="Info">
+        <div class="col-md-12" *ngFor="let items of response">
+            <p class="SeatNumber" *ngIf="items.AvailableSeatCount > 0;" (click)="GoToService(items.ID)">
+                <span style="color: rgb(224, 33, 33);"> {{items.DepartureTime}}</span> :
+                <span style="color: rgb(9, 156, 46);">{{items.AvailableSeatCount}}</span>
+            </p>
         </div>
     </div>
-</div>

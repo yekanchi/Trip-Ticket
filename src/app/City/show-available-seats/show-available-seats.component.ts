@@ -9,17 +9,30 @@ import { CityService } from 'src/app/Services/city.service';
   styleUrls: ['./show-available-seats.component.css'],
 })
 export class ShowAvailableSeatsComponent implements OnInit {
-  constructor(private cityService: CityService) {}
   isSearching = false;
+  interval: any;
+  timeNumbers: number[];
+  originName: string;
+  destinationName: string;
+  shownseats: any;
+
+  public response: Items[] = [];
+  public citiesList: any;
+
+  constructor(private cityService: CityService) {
+    this.timeNumbers = [];
+    for (let n = 8; n <= 23; n++) {
+      this.timeNumbers.push(n);
+    }
+  }
 
   TicketForm = new FormGroup({
     origin: new FormControl(),
     destination: new FormControl(),
     date: new FormControl(),
+    timeFrom: new FormControl(),
+    timeTo: new FormControl(),
   });
-
-  public response: Items[];
-  public citiesList: any;
 
   ngOnInit(): void {
     this.getCityList();
@@ -30,15 +43,10 @@ export class ShowAvailableSeatsComponent implements OnInit {
     audio.src = '/assets/audio/Alarm.mp3';
     audio.load();
     audio.play();
-    setTimeout(function () {
-      audio.pause();
-      audio.currentTime = 0;
-    }, 5000);
   }
 
   ShowAvailSeat() {
-    this.response = [];
-    setInterval(() => {
+    this.interval = setInterval(() => {
       this.cityService
         .getCityUrl(
           this.TicketForm.value.origin,
@@ -47,15 +55,37 @@ export class ShowAvailableSeatsComponent implements OnInit {
         )
         .subscribe((res) => {
           this.isSearching = true;
-          console.log(res);
-          this.response = res.Items;
-          for (const i of this.response) {
-            if (i.AvailableSeatCount > 0) {
-              this.playAudio();
+          this.response.length = 0;
+
+          this.originName = res.OriginEnglishName;
+          this.destinationName = res.DestinationEnglishName;
+
+          for (const i of res.Items) {
+            var timeString = new Date('2023-01-01T' + i.DepartureTime);
+
+            const departureHour = timeString.getHours();
+            if (
+              departureHour >= this.TicketForm.value.timeFrom &&
+              departureHour <= this.TicketForm.value.timeTo
+            ) {
+              this.response.push(i);
+              console.log(this.response);
+
+              this.response.forEach((e) => {
+                if (e.AvailableSeatCount > 0) {
+                  this.playAudio();
+                }
+              });
             }
           }
         });
-    }, 20000);
+    }, 5000);
+  }
+
+  StopSearching() {
+
+    clearInterval(this.interval);
+    this.isSearching = false;
   }
 
   getCityList() {
@@ -70,5 +100,12 @@ export class ShowAvailableSeatsComponent implements OnInit {
 
   getDestinationCode(data: any) {
     this.TicketForm.value.destination = data.target.value;
+  }
+
+  GoToService(serviceID: number) {
+    window.open(
+      `https://safar724.com/checkout/${this.TicketForm.value.origin}/${this.originName}/${this.TicketForm.value.destination}/${this.destinationName}/${this.TicketForm.value.date}/${serviceID}-${this.TicketForm.value.destination}#step-reserve`,
+      '_blanke'
+    );
   }
 }
