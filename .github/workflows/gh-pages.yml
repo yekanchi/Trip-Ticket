@@ -37,10 +37,7 @@ jobs:
         with:
           node-version: '20.11'
           check-latest: true
-      
-      - name: Install Angular
-        run: npm install -g @angular/cli@15.1;
-
+      - run: npm install -g @angular/cli@15.1;
       - name: info
         run: |
           Write-Host "Node Version:" -NoNewLine;
@@ -48,14 +45,11 @@ jobs:
           ng version;
           pwd;
           tree;
-
-      - name: npm install
-        run: npm install
-
+      - run: npm install
       - name: ng build
         run: ng build --output-path ./gh-pages --base-href https://yekanchi.github.io/Trip-Ticket/
 
-
+      - run: tree;
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
