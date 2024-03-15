@@ -43,6 +43,9 @@ jobs:
 
       - name: npm install
         run: npm install
+
+      - name: ng build
+        run: ng build
           
       - uses: OrbitalOwen/desktop-screenshot-action@0.1
         with:
