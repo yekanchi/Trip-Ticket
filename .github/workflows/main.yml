@@ -39,7 +39,7 @@ jobs:
           node --verion;
           ng version;
           pwd;
-          Get-ChildItem -Recurse
+          tree;
 
       - name: npm install
         run: npm install
