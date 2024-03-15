@@ -31,6 +31,32 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Install Nodejs
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.11'
+          check-latest: true
+      
+      - name: Install Angular
+        run: npm install -g @angular/cli@15.1;
+
+      - name: info
+        run: |
+          Write-Host "Node Version:" -NoNewLine;
+          node --verion;
+          ng version;
+          pwd;
+          tree;
+
+      - name: npm install
+        run: npm install
+
+      - name: ng build
+        run: ng build --output-path ./gh-pages --base-href https://yekanchi.github.io/Trip-Ticket/
+
+
+
       - name: Setup Pages
         uses: actions/configure-pages@v4
       - name: Upload artifact
