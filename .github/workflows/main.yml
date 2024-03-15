@@ -1,0 +1,50 @@
+name: Publish Github Pages
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  Prepare:
+    defaults:
+      run:
+        shell: pwsh
+    runs-on: windows-latest
+
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v4
+      
+      - name: Run a one-line script
+        run: Write-Host "Starting...!";
+
+      - name: Install Nodejs
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.11'
+          check-latest: true
+      
+      - name: Install Angular
+        run: npm install -g @angular/cli@15.1;
+
+      - name: info
+        run: |
+          Write-Host "Node Version:" -NoNewLine;
+          node --verion;
+          ng version;
+          pwd;
+          Get-ChildItem -Recurse
+
+      - name: npm install
+        run: npm install
+          
+      - uses: OrbitalOwen/desktop-screenshot-action@0.1
+        with:
+          file-name: 'server-dekstop.jpg'
+  
